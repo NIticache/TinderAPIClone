@@ -1,22 +1,29 @@
-const authMiddleware=(req,res,next)=>{
-    const isAuthorised=false
-    if(isAuthorised)
-    {
-        next()
-    }
-    else{
-        res.status(401).send("Unauthorised access")
-    }
-    }
+const jwt =require("jsonwebtoken")
+const User =require("../model/userModel")
 
-    const userMiddleware=(req,res,next)=>{
-        const isAuthorised=true
-        if(isAuthorised)
+    const userAuthentication=async(req,res,next)=>{
+       try{
+        const token =req.cookies.access_token
+        if(token)
         {
-            next()
+            const {_id} =jwt.verify(token,"VijiNiti@0506")
+            const user= await User.findById(_id)
+            if(user)
+            {
+                req.user=user
+                next()
+            }
+            else{
+                 res.status(400).send("User Not found")
+            }
         }
         else{
-            res.status(401).send("Unauthorised access")
+            res.status(400).send("Invalid Token")
         }
+    }
+   
+       catch(err){
+            res.send("Something went wrong" + err)
+       }
         }    
-module.exports={authMiddleware,userMiddleware}
+module.exports={userAuthentication}
