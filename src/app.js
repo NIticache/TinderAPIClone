@@ -6,13 +6,14 @@
 const authRouter=require("./routes/authRouter")
 const profileRouter= require("./routes/profileRouter")
     const User =require("./model/userModel")
+const connectionRouter = require("./routes/connectionRouter")
     const app =express()
     app.use(express.json())
     app.use(cookie())
 
   app.use("/",authRouter)
   app.use("/",profileRouter)
-  
+  app.use("/",connectionRouter)
  
     app.patch("/user",async(req,res)=>{
         try{
