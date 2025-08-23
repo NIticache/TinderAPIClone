@@ -36,7 +36,7 @@ connectionRouter.post("/connection/accept/:status/:userId",userAuthentication,as
     const status=req.params.status
     const toUserId=req.params.userId
     console.log(status,toUserId)
-    const allowedStatus =["ignored","interested"]
+    const allowedStatus =["accepted","rejected"]
     if(!allowedStatus?.includes(status))
     {
         return ("status is not allowed")
