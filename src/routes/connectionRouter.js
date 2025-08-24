@@ -29,28 +29,38 @@ catch(err){
 }
 })
 
-connectionRouter.post("/connection/accept/:status/:userId",userAuthentication,async(req,res)=>{
-    try{
+connectionRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedInUser = req.user;
+      const { status, requestId } = req.params;
 
-    
-    const status=req.params.status
-    const toUserId=req.params.userId
-    console.log(status,toUserId)
-    const allowedStatus =["accepted","rejected"]
-    if(!allowedStatus?.includes(status))
-    {
-        return ("status is not allowed")
+      const allowedStatus = ["accepted", "rejected"];
+      if (!allowedStatus.includes(status)) {
+        return res.status(400).json({ messaage: "Status not allowed!" });
+      }
+
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+      if (!connectionRequest) {
+        return res
+          .status(404)
+          .json({ message: "Connection request not found" });
+      }
+
+      connectionRequest.status = status;
+
+      const data = await connectionRequest.save();
+
+      res.json({ message: "Connection request " + status, data });
+    } catch (err) {
+      res.status(400).send("ERROR: " + err.message);
     }
-    const data=new ConnectionRequest({
-        fromUserId:req.user._id,
-        toUserId,
-        status
-    })
-await data.save()
-    res.send("Connection Request sent")
-}
-catch(err){
-    res.status(400).send("something went wrong",err.message)
-}
-})
+  }
+);
 module.exports=connectionRouter
