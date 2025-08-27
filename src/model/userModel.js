@@ -39,12 +39,12 @@ password:{
 
 
 })
-userSchema.methods.getJwt= function(){
-     
-                 console.log("herrrrrrrr")
-             const token=jwt.sign({_id:this._id },"VijiNiti@0506",{expiresIn:"1d"})
-             console.log(token,"....")
-        return token
+    userSchema.methods.getJwt= function(){
+        
+                    console.log("herrrrrrrr")
+                const token=jwt.sign({_id:this._id },"VijiNiti@0506",{expiresIn:"1d"})
+                console.log(token,"....")
+            return token
 
 }
 
