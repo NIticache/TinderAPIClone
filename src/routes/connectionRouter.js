@@ -31,7 +31,7 @@ catch(err){
 
 connectionRouter.post(
   "/request/review/:status/:requestId",
-  userAuth,
+  userAuthentication,
   async (req, res) => {
     try {
       const loggedInUser = req.user;
